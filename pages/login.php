@@ -12,8 +12,8 @@
   if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
       //Get form data
-      $email = trim($POST['email']);
-      $password = trim($POST['password']);
+      $email = trim($_POST['email']);
+      $password = trim($_POST['password']);
 
       //SQL query to find user by email
       $sql = "SELECT * FROM users WHERE email = ?";
