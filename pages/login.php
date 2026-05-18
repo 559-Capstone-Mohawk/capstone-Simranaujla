@@ -1,3 +1,57 @@
+
+<?php
+  //Start session
+  session_start();
+  
+  //Database connection
+  require_once '../config/database.php';
+
+  $message = "";
+
+  //Check if login form is submitted
+  if ($_SERVER["REQUEST_METHOD"] == "POST"){
+
+      //Get form data
+      $email = trim($POST['email']);
+      $password = trim($POST['password']);
+
+      //SQL query to find user by email
+      $sql = "SELECT * FROM users WHERE email = ?";
+
+      $stmt = mysqli_prepare($conn,$sql);
+      mysqli_stmt_bind_param($stmt, "s" , $email);
+      mysqli_stmt_execute($stmt);
+      $result = mysqli_stmt_get_result($stmt);
+
+      //Check if user exists
+      if (mysqli_num_rows($result) == 1){
+        $user = mysqli_fetch_assoc($result);
+
+        //Verify hashed password
+        if (password_verify($password, $user['password_hash'])){
+
+             //Store session data 
+             $_SESSION['user_id'] = $user['user_id'];
+             $_SESSION['full_name'] = $user['full_name'];
+             $_SESSION['role_id'] = $user['role_id'];
+
+             $message = "Login successful";
+        }
+        else{
+            $message ="Invalid password";
+        }
+      }
+        else{
+            $message = "User not found";
+        }
+      }
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html>
     <head>
