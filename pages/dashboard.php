@@ -20,6 +20,20 @@
 
         <p>Welcome, <?php echo $_SESSION['full_name']; ?> </p>
         <p>You are successfully logged in. </p>
+
+        <?php
+          if ($_SESSION['role_id']== 1){
+            echo "<h3>Employer Dashboard</h3>";
+            echo "<p>Manage employees and announcements.</p>";
+          }
+
+          else{
+            echo "<h3>Employee Dashboard</h3>";
+            echo "<p>View work hours and punch records.</p>";
+
+          }
+
+        ?>
         <a href="logout.php">Logout</a>
     </body>
 </html>
