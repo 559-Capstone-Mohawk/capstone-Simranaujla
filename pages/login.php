@@ -35,7 +35,8 @@
              $_SESSION['full_name'] = $user['full_name'];
              $_SESSION['role_id'] = $user['role_id'];
 
-             $message = "Login successful";
+             header("Location: dashboard.php");
+             exit();
         }
         else{
             $message ="Invalid password";
