@@ -20,29 +20,60 @@
     // Save punch in timestamp
     $punch_in = date ("Y-m-d H:i:s");
 
-    // Insert time record into database
-    $sql = "INSERT INTO time_Records
-     (user_id, work_date, punch_in) 
-     VALUES (?,?,?)";
+    //Check if user already punched in today 
+    $check_sql = "SELECT * FROM time_records
+    WHERE user_id = ? 
+    AND work_date = ? 
+    AND punch_out IS NULL";
 
-    $stmt = mysqli_prepare($conn, $sql);
-    if (!$stmt){
-         die(mysqli_error($conn));
-    }
-
+    $check_stmt = mysqli_prepare($conn, $check_sql);
     mysqli_stmt_bind_param(
-        $stmt,
-        "iss",
+        $check_stmt,
+        "is",
         $user_id,
-        $work_date,
-        $punch_in
+        $work_date
+
     );
 
-    if (mysqli_stmt_execute($stmt)){
-        $message = "Punch In successful.";
+    mysqli_stmt_execute($check_stmt);
+
+    $check_result = mysqli_stmt_get_result($check_stmt);
+
+
+
+
+    
+    if (mysqli_num_rows($check_result) > 0){
+        $message = "You already punched in today.";
     }else{
-        $message = mysqli_error($conn);
-    }
+        // Insert time record into database
+        $sql = "INSERT INTO time_Records
+            (user_id, work_date, punch_in) 
+            VALUES (?,?,?)";
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if (!$stmt){
+             die(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param(
+             $stmt,
+             "iss",
+             $user_id,
+             $work_date,
+             $punch_in
+        );
+
+        if (mysqli_stmt_execute($stmt)){
+             $message = "Punch In successful.";
+        }else{
+             $message = mysqli_error($conn);
+        }
+
+     }
+    
+    
+    
  }
 ?>
 
