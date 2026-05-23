@@ -20,6 +20,7 @@
 
         <p>Welcome, <?php echo $_SESSION['full_name']; ?> </p>
         <p>You are successfully logged in. </p>
+        <a href="time_tracking.php">Time Tracking</a><br><br>
 
         <?php
           if ($_SESSION['role_id']== 1){
