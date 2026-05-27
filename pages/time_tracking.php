@@ -14,9 +14,71 @@
 
     $user_id = $_SESSION['user_id'];
 
+    $action = $_POST['action'];
+
     $work_date = date("Y-m-d");
 
 
+
+    //Punch out 
+
+    if ($action == "punch_out") {
+
+    $find_sql = "SELECT * FROM time_records
+     WHERE user_id = ? 
+     AND punch_out is NULL 
+     ORDER BY record_id DESC
+     LIMIT 1 ";
+    
+
+    $find_stmt = mysqli_prepare($conn, $find_sql);
+
+    mysqli_stmt_bind_param(
+        $find_stmt,
+        "i",
+        $user_id
+    );
+     
+    mysqli_stmt_execute($find_stmt);
+
+    $record = mysqli_fetch_assoc(
+        mysqli_stmt_get_result($find_stmt)
+    );
+
+    if ($record){
+        $punch_out = date("Y-m-d H:i:s");
+        $hours=
+        (
+            strtotime($punch_out)
+            -
+            strtotime($record['punch_in'])
+        ) / 3600;
+
+        $update_sql = "UPDATE time_records
+        SET punch_out = ? ,
+        total_hours = ? 
+        WHERE record_id = ? ";
+
+
+        $update_stmt = mysqli_prepare($conn, $update_sql);
+        mysqli_stmt_bind_param(
+            $update_stmt,
+            "sdi",
+            $punch_out,
+            $hours,
+            $record['record_id']
+        );
+
+        mysqli_stmt_execute($update_stmt);
+
+        $message = "Punch Out successful.";
+
+    }
+     else{
+        $message = "No active punch in found.";
+       
+    }
+    } elseif ($action == "punch_in"){
     // Save punch in timestamp
     $punch_in = date ("Y-m-d H:i:s");
 
@@ -72,6 +134,7 @@
 
      }
     
+    }
     
     
  }
@@ -91,7 +154,8 @@
         <p><?php echo $message; ?> </p>
         <form method="POST">
 
-        <button type="submit">Punch In</button>
+        <button type="submit" name ="action" value="punch_in">Punch In</button>
+        <button type="submit" name ="action" value="punch_out">Punch Out</button>
 
         </form>
 
