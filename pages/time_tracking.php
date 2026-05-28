@@ -138,6 +138,24 @@
     
     
  }
+
+ // Fetch employee time records
+ $records_sql = "SELECT * FROM time_records
+ WHERE user_id = ? 
+ ORDER BY record_id DESC ";
+
+
+$records_stmt = mysqli_prepare($conn, $records_sql);
+
+mysqli_stmt_bind_param(
+    $records_stmt,
+    "i",
+    $_SESSION['user_id']
+);
+
+mysqli_stmt_execute($records_stmt);
+
+$records_result = mysqli_stmt_get_result($records_stmt);
 ?>
 
 <!DOCTYPE html>
@@ -158,6 +176,27 @@
         <button type="submit" name ="action" value="punch_out">Punch Out</button>
 
         </form>
+
+        <h2>Work Records</h2>
+        <table border="1" cellpadding="10 ">
+            <tr>
+                <th>Date</th>
+                <th>Punch In</th>
+                <th>Punch Out</th>
+                <th>Total Hours</th>
+            </tr>
+
+            <?php while($row = mysqli_fetch_assoc($records_result)) { ?>
+             
+              <tr>
+                  <td><?php echo $row['work_date']; ?></td>
+                  <td><?php echo $row['punch_in']; ?></td>
+                  <td><?php echo $row['punch_out']; ?></td>
+                  <td><?php echo $row['total_hours']; ?></td>
+              </tr>
+           
+            <?php } ?>
+        </table>
 
         <a href="dashboard.php">Back to Dashboard</a>
     </body>
