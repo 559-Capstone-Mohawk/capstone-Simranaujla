@@ -14,11 +14,14 @@ if ($_SESSION['role_id'] != 1){
 }
 
 //Fetch all employee work records
-$sql = "SELECT users.full_name,
+$sql = "SELECT 
+time_records.record_id,
+users.full_name,
 time_records.work_date,
 time_records.punch_in,
 time_records.punch_out,
-time_records.total_hours
+time_records.total_hours,
+time_records.approval_status
 FROM time_records
 INNER JOIN users
 ON time_records.user_id = users.user_id
@@ -43,6 +46,8 @@ $result = mysqli_query($conn, $sql);
                 <th>Punch In</th>
                 <th>Punch Out</th>
                 <th>Total Hours</th>
+                <th>Status</th>
+                <th>Action</th>
             </tr>
 
             <?php while ($row = mysqli_fetch_assoc($result)) { ?>
@@ -53,6 +58,11 @@ $result = mysqli_query($conn, $sql);
                    <td><?php echo $row['punch_in']; ?></td>
                    <td><?php echo $row['punch_out']; ?></td>
                    <td><?php echo $row['total_hours']; ?></td>
+                   <td><?php echo $row['approval_status']; ?></td>
+                   <td>
+                      <a href="update_status.php?id=<?php echo $row['record_id']; ?>&status=Approved">Approve</a>
+                      <a href ="update_status.php?id=<?php echo $row['record_id']; ?>&status=Rejected">Reject </a>
+                   </td> 
 
                    
                </tr>
