@@ -27,11 +27,13 @@
             echo "<h3>Employer Dashboard</h3>";
             echo "<p>Manage employees and announcements.</p>";
             echo '<a href="manage_records.php"> Manage Employee Records</a><br><br>';
+            echo '<a href="announcements.php">Announcements</a><br><br>';
           }
 
           else{
             echo "<h3>Employee Dashboard</h3>";
             echo "<p>View work hours and punch records.</p>";
+            echo '<a href="announcements.php">Announcements</a><br><br>';
 
           }
 
