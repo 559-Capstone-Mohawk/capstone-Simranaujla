@@ -44,6 +44,21 @@
 
     }
     
+
+    //Fetch announcements from database
+    $announcement_sql ="SELECT 
+    announcements.title,
+    announcements.message,
+    announcements.created_at,
+    users.full_name
+    FROM announcements
+    INNER JOIN users
+    ON announcements.created_by = users.user_id
+    ORDER BY announcements.created_at DESC";
+
+    $announcement_result = mysqli_query($conn,$announcement_sql);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +81,23 @@
 
         </form>
         <br>
+
+        <h2>Announcements</h2>
+
+        <?php while ($row = mysqli_fetch_assoc($announcement_result)) { ?>
+            <h3><?php echo $row['title']; ?></h3>
+
+            <p><?php echo $row[$message]?></p>
+
+            <small>
+                Posted by:
+                <?php echo $row['full_name']; ?>
+                <?php echo $row['created_at']; ?>
+            </small>
+            <hr>
+            <?php
+
+        } ?>
 
         <a href="dashboard.php">Back to Dashboard</a>
     </body> 
