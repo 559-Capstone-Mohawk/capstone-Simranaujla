@@ -6,12 +6,7 @@
         exit();
 
     }
-    // Restrict announcement creation to Employer accounts
-    if($_SESSION['role_id'] != 1){
-        header("Location: dashboard.php");
-        exit();
-
-    }
+   
 
     $message = "";
 
@@ -68,18 +63,20 @@
     </head>
 
     <body>
-        <h1> Create Announcements</h1>
-        <p><?php echo $message; ?></p>
-        <form method="POST">
-            <label>Title></label><br>
-            <input type="text" name="title"><br><br>
+        <?php if ($_SESSION['role_id'] == 1) { ?>
+            <h1> Create Announcements</h1>
+            <p><?php echo $message; ?></p>
+            <form method="POST">
+                <label>Title></label><br>
+                <input type="text" name="title"><br><br>
 
-            <label>Message</label><br>
-            <textarea name="message" rows="5" cols="40" ></textarea><br><br>
+                <label>Message</label><br>
+                <textarea name="message" rows="5" cols="40" ></textarea><br><br>
 
-            <button type="submit">Post Announcement</button>
+                <button type="submit">Post Announcement</button>
 
-        </form>
+            </form>
+        <?php } ?>
         <br>
 
         <h2>Announcements</h2>
