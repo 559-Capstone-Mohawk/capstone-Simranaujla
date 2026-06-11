@@ -40,9 +40,16 @@
 
     <body>
         <h1>My Profile</h1>
-        <p><strong>Name:</strong><?php echo $user['full_name']; ?></p>
-        <p><strong>Email:</strong><?php echo $user['email']; ?></p>
-        <p><strong>Phone:</strong><?php echo $user['phone']; ?></p>
+        <form method="POST">
+            <label>Full Name</label> <br>
+            <input type = "text" name ="full_name" value = " <?php echo $user['full_name']; ?> " ><br><br>
+
+            <input type = "email" value = " <?php echo $user['email']; ?> " disabled><br><br>
+
+            <input type = "text" name ="phone" value = " <?php echo $user['phone']; ?> " ><br><br>
+
+            <button type = "submit"> Update Profile </button>
+        </form>
         <br>
 
         <a href = "dashboard.php">Back to Dashboard </a>
