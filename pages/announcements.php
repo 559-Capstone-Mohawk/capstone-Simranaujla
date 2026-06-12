@@ -67,7 +67,7 @@
             <h1> Create Announcements</h1>
             <p><?php echo $message; ?></p>
             <form method="POST">
-                <label>Title></label><br>
+                <label>Title</label><br>
                 <input type="text" name="title"><br><br>
 
                 <label>Message</label><br>

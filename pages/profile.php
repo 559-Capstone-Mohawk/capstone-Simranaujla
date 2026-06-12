@@ -8,6 +8,37 @@
         exit();
     }
 
+    $message ="";
+    //Process profile update request
+    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+        $full_name = trim($_POST['full_name']);
+        $phone = trim($_POST['phone']);
+
+        //Update employee profile information
+        $update_sql = "UPDATE users 
+        SET full_name = ? ,
+        phone =? 
+        WHERE user_id ?";
+
+
+        $update_stmt =
+        mysqli_prepare($conn, $update_sql);
+
+        mysqli_stmt_bind_param(
+            $update_stmt,
+            "ssi",
+            $full_name,
+            $phone,
+            $_SESSION['user_id']
+        );
+
+        if (mysqli_stmt_execute($update_stmt)){
+            $message = "Profile updated successfully";
+        } else{
+            $message = mysqli_error($conn);
+        }
+    }
+
     //Fetch employee profile information
 
     $sql = "SELECT full_name,email,phone
@@ -40,6 +71,7 @@
 
     <body>
         <h1>My Profile</h1>
+        <p><?php echo $message;?><p>
         <form method="POST">
             <label>Full Name</label> <br>
             <input type = "text" name ="full_name" value = " <?php echo $user['full_name']; ?> " ><br><br>
