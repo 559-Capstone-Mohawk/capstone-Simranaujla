@@ -18,7 +18,7 @@
         $update_sql = "UPDATE users 
         SET full_name = ? ,
         phone =? 
-        WHERE user_id ?";
+        WHERE user_id = ?";
 
 
         $update_stmt =
@@ -43,7 +43,7 @@
 
     $sql = "SELECT full_name,email,phone
     FROM users 
-    WHERE use_id = ?";
+    WHERE user_id = ?";
 
     $stmt = mysqli_prepare($conn,$sql);
 

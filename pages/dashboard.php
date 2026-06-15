@@ -33,6 +33,7 @@
           else{
             echo "<h3>Employee Dashboard</h3>";
             echo "<p>View work hours and punch records.</p>";
+            echo '<a href="profile.php">My Profile</a><br><br>';
             echo '<a href="announcements.php">Announcements</a><br><br>';
 
           }
