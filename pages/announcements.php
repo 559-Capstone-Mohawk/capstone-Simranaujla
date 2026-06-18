@@ -84,7 +84,7 @@
         <?php while ($row = mysqli_fetch_assoc($announcement_result)) { ?>
             <h3><?php echo $row['title']; ?></h3>
 
-            <p><?php echo $row[$message]?></p>
+            <p><?php echo $row['message']?></p>
 
             <small>
                 Posted by:
