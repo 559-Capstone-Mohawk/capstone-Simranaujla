@@ -13,29 +13,37 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $full_name = trim($_POST['full_name']);
         $phone = trim($_POST['phone']);
+        
 
-        //Update employee profile information
-        $update_sql = "UPDATE users 
-        SET full_name = ? ,
-        phone =? 
-        WHERE user_id = ?";
+        // Validate required profile fields
+        if(empty($full_name) || empty($phone)){
+            $message = "Name and phone number are required.";
+        }
+
+        else{
+            //Update employee profile information
+            $update_sql = "UPDATE users 
+            SET full_name = ? ,
+            phone =? 
+            WHERE user_id = ?";
 
 
-        $update_stmt =
-        mysqli_prepare($conn, $update_sql);
+            $update_stmt =
+            mysqli_prepare($conn, $update_sql);
 
-        mysqli_stmt_bind_param(
-            $update_stmt,
-            "ssi",
-            $full_name,
-            $phone,
-            $_SESSION['user_id']
-        );
+            mysqli_stmt_bind_param(
+                $update_stmt,
+                "ssi",
+                $full_name,
+                $phone,
+                $_SESSION['user_id']
+            );
 
-        if (mysqli_stmt_execute($update_stmt)){
-            $message = "Profile updated successfully";
-        } else{
-            $message = mysqli_error($conn);
+            if (mysqli_stmt_execute($update_stmt)){
+                $message = "Profile updated successfully";
+            } else{
+                $message = mysqli_error($conn);
+            }
         }
     }
 
