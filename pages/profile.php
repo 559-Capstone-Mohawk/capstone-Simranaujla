@@ -13,6 +13,11 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $full_name = trim($_POST['full_name']);
         $phone = trim($_POST['phone']);
+
+        //Validate phone number format
+        if (!preg_match("/^[0-9]{10}$/",$phone)){
+            $message = "Please enter a valid 10 digit phone number.";
+        }
         
 
         // Validate required profile fields
