@@ -14,15 +14,20 @@
         $full_name = trim($_POST['full_name']);
         $phone = trim($_POST['phone']);
 
-        //Validate phone number format
-        if (!preg_match("/^[0-9]{10}$/",$phone)){
-            $message = "Please enter a valid 10 digit phone number.";
-        }
-        
-
+    
         // Validate required profile fields
         if(empty($full_name) || empty($phone)){
             $message = "Name and phone number are required.";
+        }
+
+        //Validate full name 
+        elseif(!preg_match("/^[a-zA-Z ]+$/", $full_name)){
+            $message = "Name can only contain letter and spaces";
+        }
+
+        //Validate phone number format
+        elseif (!preg_match("/^[0-9]{10}$/",$phone)){
+            $message = "Please enter a valid 10 digit phone number.";
         }
 
         else{
