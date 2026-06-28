@@ -15,25 +15,42 @@
         $title = trim($_POST['title']);
         $announcement = trim($_POST['message']);
 
-        //Save announcement to database
-        $sql = "INSERT INTO announcements
-        (title,message,created_by)
-        VALUES (?,?,?)";
+        //Validate required announcement fields
+        if (empty($title) || empty($message)){
+            $message_text = "Title and announcement message are required.";
+        }
 
-        $stmt = mysqli_prepare($conn,$sql);
+        else{
+            //Save announcement to database
+            $sql = "INSERT INTO announcements
+            (title,message,created_by)
+            VALUES (?,?,?)";
 
-        mysqli_stmt_bind_param(
-            $stmt,
-            "ssi",
-            $title,
-            $announcement,
-            $_SESSION['user_id']
-        );
+             $stmt = mysqli_prepare($conn,$sql);
 
-        if (mysqli_stmt_execute($stmt)){
-            $message = "Announcement posted successfully.";
-        }else{
-            $message = mysqli_error($conn);
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssi",
+                $title,
+                $announcement,
+                $_SESSION['user_id']
+            );
+            
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssi",
+                $title,
+                $announcement,
+                $_SESSION['user_id']
+            
+            );
+
+            if (mysqli_stmt_execute($stmt)){
+                $message = "Announcement posted successfully.";
+            }
+            else{
+                $message = mysqli_error($conn);
+            }
         }
 
 
