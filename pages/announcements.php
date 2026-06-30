@@ -16,8 +16,8 @@
         $announcement = trim($_POST['message']);
 
         //Validate required announcement fields
-        if (empty($title) || empty($message)){
-            $message_text = "Title and announcement message are required.";
+        if (empty($title) || empty($announcement)){
+            $message = "Title and announcement message are required.";
         }
 
         else{
@@ -36,14 +36,6 @@
                 $_SESSION['user_id']
             );
             
-            mysqli_stmt_bind_param(
-                $stmt,
-                "ssi",
-                $title,
-                $announcement,
-                $_SESSION['user_id']
-            
-            );
 
             if (mysqli_stmt_execute($stmt)){
                 $message = "Announcement posted successfully.";
@@ -98,20 +90,25 @@
 
         <h2>Announcements</h2>
 
-        <?php while ($row = mysqli_fetch_assoc($announcement_result)) { ?>
-            <h3><?php echo $row['title']; ?></h3>
+        <?php 
+          if(mysqli_num_rows($announcement_result)>0){
+            while ($row = mysqli_fetch_assoc($announcement_result)) { ?>
+                <h3><?php echo $row['title']; ?></h3>
 
-            <p><?php echo $row['message']?></p>
+                <p><?php echo $row['message']?></p>
 
-            <small>
-                Posted by:
-                <?php echo $row['full_name']; ?>
-                <?php echo $row['created_at']; ?>
-            </small>
-            <hr>
-            <?php
-
-        } ?>
+                <small>
+                    Posted by:
+                    <?php echo $row['full_name']; ?>
+                    <?php echo $row['created_at']; ?>
+                </small>
+                <hr>
+        <?php
+            }
+          } else{
+            echo"<p> No announcement available.</p>";
+          } 
+        ?>
 
         <a href="dashboard.php">Back to Dashboard</a>
     </body> 
