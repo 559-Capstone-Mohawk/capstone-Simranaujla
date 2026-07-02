@@ -13,11 +13,13 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $full_name = trim($_POST['full_name']);
         $phone = trim($_POST['phone']);
+        $email = trim($_POST['email']);
 
-    
+
+
         // Validate required profile fields
-        if(empty($full_name) || empty($phone)){
-            $message = "Name and phone number are required.";
+        if(empty($full_name) || empty($email) || empty($phone) ){
+            $message = "Name ,email and phone number are required.";
         }
 
         //Validate full name 
@@ -29,30 +31,63 @@
         elseif (!preg_match("/^[0-9]{10}$/",$phone)){
             $message = "Please enter a valid 10 digit phone number.";
         }
+        
+        //Validate email format
+        elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)){
+            $message = "Please enter a valid email address.";
+        }
 
         else{
-            //Update employee profile information
-            $update_sql = "UPDATE users 
-            SET full_name = ? ,
-            phone =? 
-            WHERE user_id = ?";
-
-
-            $update_stmt =
-            mysqli_prepare($conn, $update_sql);
+            //Check if email already exists
+            $check_sql = "SELECT user_id
+            FROM users
+            WHERE email= ?
+            AND user_id != ?";
+            
+            $check_stmt =mysqli_prepare($conn,$check_sql);
 
             mysqli_stmt_bind_param(
-                $update_stmt,
-                "ssi",
-                $full_name,
-                $phone,
+                $check_stmt,
+                "si",
+                $email,
                 $_SESSION['user_id']
             );
 
-            if (mysqli_stmt_execute($update_stmt)){
-                $message = "Profile updated successfully";
-            } else{
-                $message = mysqli_error($conn);
+            mysqli_stmt_execute($check_stmt);
+
+        
+            $check_result = mysqli_stmt_get_result($check_stmt);
+
+            if(mysqli_num_rows($check_result)>0){
+                $message = "Email is already in use.";
+            }
+
+            else{
+                //Update employee profile information
+                $update_sql = "UPDATE users 
+                SET full_name = ? ,
+                email = ?,
+                phone =? 
+                WHERE user_id = ?";
+
+
+                $update_stmt =
+                mysqli_prepare($conn, $update_sql);
+
+                mysqli_stmt_bind_param(
+                    $update_stmt,
+                    "sssi",
+                    $full_name,
+                    $email,
+                    $phone,
+                    $_SESSION['user_id']
+                );
+
+                if (mysqli_stmt_execute($update_stmt)){
+                    $message = "Profile updated successfully";
+                } else{
+                    $message = mysqli_error($conn);
+                }
             }
         }
     }
@@ -94,7 +129,7 @@
             <label>Full Name</label> <br>
             <input type = "text" name ="full_name" value = " <?php echo $user['full_name']; ?> " ><br><br>
 
-            <input type = "email" value = " <?php echo $user['email']; ?> " disabled><br><br>
+            <input type = "email" value = " <?php echo $user['email']; ?> " ><br><br>
 
             <input type = "text" name ="phone" value = " <?php echo $user['phone']; ?> " ><br><br>
 
